@@ -22,5 +22,11 @@ public class TestStr {
 
         Str s3 = new Str();
         System.out.println("|"+s3+"|");  // -> ||
+        s3.append("sjhfkdfghdkhjhgdkjgkjgkjdf");
+
+        CharSequence seq = new Str("Xpto abc");
+        System.out.println(seq.length()); // -> 4
+        System.out.println(seq.charAt(3));// -> o
+        System.out.println(seq.subSequence(2,6)); // -> to a
     }
 }

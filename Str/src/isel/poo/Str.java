@@ -1,55 +1,65 @@
 package isel.poo;
 
-public class Str {
+public class Str implements CharSequence {
     private static final int MAX_DIM = 16;
     private char[] text = new char[MAX_DIM];
     private int dim = 0;
 
     public Str(String txt) {
-        //TODO: Corrigir porque o array inicial pode não ser suficiente
-        for(dim=0 ; dim < txt.length()  ; ++dim)
-            text[ dim ] = txt.charAt(dim);
+        final int len = txt.length();
+        if (len>MAX_DIM) expand(len);
+        txt.getChars(0,len,text,0);
+        dim = len;
+    }
+    public Str(CharSequence txt) {
+        final int len = txt.length();
+        if (len>MAX_DIM) expand(len);
+        for(int i=0 ; i<len ; ++i) text[i] = txt.charAt(i);
+        dim = len;
     }
     public Str() { }
     public void append(char c) {
-        final int len = text.length;
-        if (dim==len) {
-            char[] big= new char[ len*2 ];          //1 TODO: Evitar a repetição destas 3 instruções
-            //for (int i = 0; i < text.length; i++) big[i] = text[i];
-            System.arraycopy(text, 0, big, 0, len); //2
-            text = big;                             //3
-        }
+        if (dim==text.length) expand(dim+1);
         text[ dim++ ] = c;
     }
     public void append(String s) {
-        if (dim + s.length() > text.length) {
-            int bigDim = text.length*2;
-            while (bigDim < dim+s.length()) bigDim*=2;
-            char[] big= new char[ bigDim ];         //1 TODO: Evitar a repetição destas 3 instruções
-            System.arraycopy(text, 0, big, 0, dim); //2
-            text = big;                             //3
-        }
-        for(int i=0 ; i<s.length() ; ++i)
-            text[dim++] = s.charAt(i);  //this.append(s.charAt(i));
+        final int l = s.length();
+        final int len = dim + l;
+        if ( len > text.length) expand(len);
+        s.getChars(0,l,text,dim);
+        dim += l;
     }
+    private void expand(int size) {
+        int dim = text.length*2;
+        while (dim < size) dim*=2;
+        char[] big= new char[dim];
+        System.arraycopy(text, 0, big, 0, this.dim);
+        text = big;
+    }
+
     public void remove(int from, int to) {
         if (from<0 || to>dim)
             throw new IndexOutOfBoundsException( from<0 ? from : to );
         if (to>from) {
-            for (; to < dim; ++from, ++to)
-                text[from] = text[to];
-            dim -= to - from;
+            final int len = to-from;
+            System.arraycopy(text,to,text,from,len);
+            dim -= len;
         }
     }
-    public String toString() {
-        return new String(text,0,dim);
-    }
-    public int length() {
-        return dim;
-    }
-
+    @Override
+    public String toString() {  return new String(text,0,dim); }
+    @Override
+    public int length() { return dim; }
+    @Override
     public char charAt(int idx) {
         if (idx>=dim) throw new IndexOutOfBoundsException(idx);
         return text[idx];
+    }
+    @Override
+    public CharSequence subSequence(int start, int end) {
+        Str res = new Str();
+        for (int i = start; i <end ; i++)
+            res.append(charAt(i));
+        return res;
     }
 }
