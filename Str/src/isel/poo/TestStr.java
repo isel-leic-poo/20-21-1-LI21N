@@ -28,5 +28,15 @@ public class TestStr {
         System.out.println(seq.length()); // -> 4
         System.out.println(seq.charAt(3));// -> o
         System.out.println(seq.subSequence(2,6)); // -> to a
+
+        Str s4 = new Str("xpabc");
+        System.out.println(s2+"=="+s4);
+        System.out.println(s4.equals(s2)); // -> true
+
+        Str s5 = s4;
+        System.out.println(s5.equals(s4)); // -> true
+        System.out.println(s5.equals(new char[]{'a','b','c'})); // -> false
+        System.out.println(s5.equals(null)); // -> false
+        s5 = new Str("xpto");
     }
 }
