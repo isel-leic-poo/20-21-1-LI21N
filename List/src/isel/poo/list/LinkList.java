@@ -1,16 +1,34 @@
 package isel.poo.list;
 
 public class LinkList {
-    Node first = null;
-    //  TODO:  count
 
-    public void add(int value) {
+    private static class Node {
+        Node next;
+        int elem;
+        Node(int value, Node next) {
+            elem = value;
+            this.next = next;
+        }
+    }
+
+    private Node first = null;
+    private Node last = null;
+    private int counter = 0;
+
+    public void addFirst(int value) {
         first = new Node(value,first);
+        if (last==null) last = first;
+        ++counter;
+    }
+    public void add(int value) {
+        Node n = new Node(value,null);
+        if (first==null) first = n;
+        else last.next = n;
+        last = n;
+        ++counter;
     }
     public int size() {
-        Node n = first;
-        for( int count=0 ;  ; ++count , n=n.next )
-            if ( n==null ) return count;
+        return counter;
     }
     public int get(int idx) {
         for(Node n=first ; ; --idx, n=n.next )
@@ -18,16 +36,31 @@ public class LinkList {
     }
 
     public void remove(int idx) {
-        if (idx==0) first = first.next;
-        else {
-            // TODO: only -> Node p
-            Node p = first;
-            --idx;
-            for(Node n=first.next ; ; --idx, p=n, n=n.next )
-                if (idx==0) {
-                    p.next = n.next;
-                    return;
-                }
+        if (idx==0) {
+            first = first.next;
+            if (first==null) last = null;
         }
+        else {
+            Node p = first;
+            for(--idx; idx>0 ;--idx )
+                p = p.next;
+            p.next = p.next.next;
+            if (p.next==null) last=p;
+        }
+        --counter;
+    }
+
+    // ---------------- Percorrer a list -----------
+    private Node cur = null;
+    public int getFirst() {
+        cur = first;
+        return cur.elem;
+    }
+    public boolean hasNext() {
+        return cur.next != null;
+    }
+    public int getNext() {
+        cur = cur.next;
+        return cur.elem;
     }
 }
