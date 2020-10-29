@@ -1,4 +1,5 @@
 package isel.poo.list;
+import isel.poo.IntIterator;
 
 public class LinkList {
 
@@ -51,16 +52,27 @@ public class LinkList {
     }
 
     // ---------------- Percorrer a list -----------
-    private Node cur = null;
-    public int getFirst() {
-        cur = first;
-        return cur.elem;
+    /*
+    private class It implements IntIterator {
+        Node cur = first;
+        public boolean hasNext() { return cur!=null; }
+        public int next() {
+            int elem = cur.elem;
+            cur = cur.next;
+            return elem;
+        }
     }
-    public boolean hasNext() {
-        return cur.next != null;
-    }
-    public int getNext() {
-        cur = cur.next;
-        return cur.elem;
+    */
+    public IntIterator getIterator() {
+        class It implements IntIterator {
+            Node cur = first;
+            public boolean hasNext() { return cur!=null; }
+            public int next() {
+                int elem = cur.elem;
+                cur = cur.next;
+                return elem;
+            }
+        }
+        return new It();
     }
 }
