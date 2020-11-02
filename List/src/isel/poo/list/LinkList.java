@@ -1,28 +1,28 @@
 package isel.poo.list;
-import isel.poo.IntIterator;
+import isel.poo.Iterator;
 
-public class LinkList {
+public class LinkList<T> {
 
-    private static class Node {
-        Node next;
-        int elem;
-        Node(int value, Node next) {
+    private static class Node<T> {
+        Node<T> next;
+        T elem;
+        Node(T value, Node<T> next) {
             elem = value;
             this.next = next;
         }
     }
 
-    private Node first = null;
-    private Node last = null;
+    private Node<T> first = null;
+    private Node<T> last = null;
     private int counter = 0;
 
-    public void addFirst(int value) {
-        first = new Node(value,first);
+    public void addFirst(T value) {
+        first = new Node<>(value,first);
         if (last==null) last = first;
         ++counter;
     }
-    public void add(int value) {
-        Node n = new Node(value,null);
+    public void add(T value) {
+        Node<T> n = new Node<>(value,null);
         if (first==null) first = n;
         else last.next = n;
         last = n;
@@ -31,8 +31,8 @@ public class LinkList {
     public int size() {
         return counter;
     }
-    public int get(int idx) {
-        for(Node n=first ; ; --idx, n=n.next )
+    public T get(int idx) {
+        for(Node<T> n=first ; ; --idx, n=n.next )
             if (idx==0) return n.elem;
     }
 
@@ -42,7 +42,7 @@ public class LinkList {
             if (first==null) last = null;
         }
         else {
-            Node p = first;
+            Node<T> p = first;
             for(--idx; idx>0 ;--idx )
                 p = p.next;
             p.next = p.next.next;
@@ -51,19 +51,8 @@ public class LinkList {
         --counter;
     }
 
-    // ---------------- Percorrer a list -----------
-    /*
-    private class It implements IntIterator {
-        Node cur = first;
-        public boolean hasNext() { return cur!=null; }
-        public int next() {
-            int elem = cur.elem;
-            cur = cur.next;
-            return elem;
-        }
-    }
-    */
-    public IntIterator getIterator() {
+    public Iterator<T> getIterator() {
+        /*
         class It implements IntIterator {
             Node cur = first;
             public boolean hasNext() { return cur!=null; }
@@ -74,5 +63,15 @@ public class LinkList {
             }
         }
         return new It();
+        */
+        return new Iterator<T>() {
+            Node<T> cur = first;
+            public boolean hasNext() { return cur!=null; }
+            public T next() {
+                T elem = cur.elem;
+                cur = cur.next;
+                return elem;
+            }
+        };
     }
 }
