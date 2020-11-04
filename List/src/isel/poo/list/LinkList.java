@@ -1,7 +1,8 @@
 package isel.poo.list;
-import isel.poo.Iterator;
+import java.util.AbstractList;
+import java.util.Iterator;
 
-public class LinkList<T> {
+public class LinkList<T> extends AbstractList<T> {
 
     private static class Node<T> {
         Node<T> next;
@@ -21,12 +22,13 @@ public class LinkList<T> {
         if (last==null) last = first;
         ++counter;
     }
-    public void add(T value) {
+    public boolean add(T value) {
         Node<T> n = new Node<>(value,null);
         if (first==null) first = n;
         else last.next = n;
         last = n;
         ++counter;
+        return true;
     }
     public int size() {
         return counter;
@@ -36,8 +38,10 @@ public class LinkList<T> {
             if (idx==0) return n.elem;
     }
 
-    public void remove(int idx) {
+    public T remove(int idx) {
+        T elem;
         if (idx==0) {
+            elem = first.elem;
             first = first.next;
             if (first==null) last = null;
         }
@@ -45,28 +49,20 @@ public class LinkList<T> {
             Node<T> p = first;
             for(--idx; idx>0 ;--idx )
                 p = p.next;
+            elem = p.next.elem;
             p.next = p.next.next;
             if (p.next==null) last=p;
         }
         --counter;
+        return elem;
     }
 
-    public Iterator<T> getIterator() {
-        /*
-        class It implements IntIterator {
-            Node cur = first;
-            public boolean hasNext() { return cur!=null; }
-            public int next() {
-                int elem = cur.elem;
-                cur = cur.next;
-                return elem;
-            }
-        }
-        return new It();
-        */
-        return new Iterator<T>() {
+    public Iterator<T> iterator() {
+        return new Iterator<>() {
             Node<T> cur = first;
-            public boolean hasNext() { return cur!=null; }
+            public boolean hasNext() {
+                return cur!=null;
+            }
             public T next() {
                 T elem = cur.elem;
                 cur = cur.next;

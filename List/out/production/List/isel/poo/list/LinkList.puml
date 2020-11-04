@@ -1,29 +1,29 @@
 @startuml
 
-class LinkList {
+class LinkList<T> {
   '-first :Node
   -counter :int
-  add(elem:int)
-  addFirst(elem:int)
-  get(idx:int) :int
+  add(elem:T)
+  addFirst(elem:T)
+  get(idx:int) :T
   remove(idx:int)
   size() :int
-  getIterator():IntIterator
+  getIterator():Iterator<T>
 }
 LinkList ..> It : <<create>>
 
-interface IntIterator {
+interface Iterator<T> {
    +hasNext():boolean
-   +next():int
+   +next():T
 }
 
-class It {
+class It<T> {
    '+hasNext():boolean
    '+next():int
 }
 
-class Node {
-  ~elem :int
+class Node<T> {
+  ~elem :T
   '~next :Node
 }
 
@@ -35,6 +35,6 @@ LinkList -> Node : -first
 LinkList -> Node : -last
 LinkList +-- It
 
-IntIterator <|. It : "      "
+Iterator <|. It : "      "
 
 @enduml

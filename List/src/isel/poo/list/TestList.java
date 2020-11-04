@@ -1,9 +1,8 @@
 package isel.poo.list;
-import isel.poo.Iterator;
 
 public class TestList {
     public static void main(String[] args) {
-        LinkList<Integer> l1 = new LinkList();
+        LinkList<Integer> l1 = new LinkList<>();
         l1.add(27);
         l1.add(10);
         l1.add(50);
@@ -24,22 +23,21 @@ public class TestList {
         printList(ls);
     }
 
-    private static int countElements(LinkList<Integer> l, int elem) {
-        Iterator<Integer> it = l.getIterator();
+    private static int countElements(Iterable<Integer> l, int elem) {
         int count = 0;
-        while ( it.hasNext() )
-            if ( it.next() == elem ) ++count;
+        for (Integer integer : l)
+            if (integer == elem) ++count;
         return count;
     }
 
-    private static boolean hasRepeatedElements(LinkList<Integer> l) {
-        for (Iterator<Integer> it = l.getIterator(); it.hasNext() ; )
-            if (countElements(l,it.next())>1) return true;
+    private static boolean hasRepeatedElements(Iterable<Integer> l) {
+        for (Integer elem : l)
+            if (countElements(l, elem) > 1) return true;
         return false;
     }
 
-    private static <T> void printList(LinkList<T> l) {
-        for (Iterator<T> it = l.getIterator(); it.hasNext() ; )
-            System.out.println( it.next() );
+    private static <T> void printList(Iterable<T> l) {
+        for (T t : l)
+            System.out.println(t);
     }
 }
