@@ -37,6 +37,7 @@ public class TestList {
     }
 
     private static <T> void printList(Iterable<T> l) {
+        System.out.println("---------printList---------------");
         for (T t : l)
             System.out.println(t);
     }

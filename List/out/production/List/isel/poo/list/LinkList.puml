@@ -32,6 +32,7 @@ class Node<T> {
 
 Node <- It : -cur
 Node -> Node : ~next
+Node -> Node : -prev
 'LinkList ..> IntIterator
 LinkList +- Node : "  "
 LinkList -> Node : -first

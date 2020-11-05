@@ -7,11 +7,19 @@ public class LinkList<T> extends AbstractList<T> {
 
     private static class Node<T> {
         Node<T> next;
-        Node<T> prev;  // TODO: modificar addFirst, add, e remove
+        Node<T> prev;
         T elem;
-        Node(T value, Node<T> next) {
+        Node(T value, Node<T> next, Node<T> prev) {
             elem = value;
             this.next = next;
+            this.prev = prev;
+            if (prev!=null) prev.next = this;
+            if (next!=null) next.prev = this;
+        }
+        T remove() {
+            if (next!=null) next.prev = prev;
+            if (prev!=null) prev.next = next;
+            return elem;
         }
     }
 
@@ -20,15 +28,13 @@ public class LinkList<T> extends AbstractList<T> {
     private int counter = 0;
 
     public void addFirst(T value) {
-        first = new Node<>(value,first);
+        first = new Node<>(value,first,null);
         if (last==null) last = first;
         ++counter;
     }
     public boolean add(T value) {
-        Node<T> n = new Node<>(value,null);
-        if (first==null) first = n;
-        else last.next = n;
-        last = n;
+        last = new Node<>(value,null,last);
+        if (first==null) first = last;
         ++counter;
         return true;
     }
@@ -43,36 +49,62 @@ public class LinkList<T> extends AbstractList<T> {
     public T remove(int idx) {
         T elem;
         if (idx==0) {
-            elem = first.elem;
+            elem = first.remove();
             first = first.next;
             if (first==null) last = null;
         }
         else {
-            Node<T> p = first;
+            Node<T> p = first.next;
             for(--idx; idx>0 ;--idx )
                 p = p.next;
-            elem = p.next.elem;
-            p.next = p.next.next;
-            if (p.next==null) last=p;
+            elem = p.remove();
+            if (p.next==null) last=p.prev;
         }
         --counter;
         return elem;
     }
 
-    public Iterator<T> iterator() {
-        return new Iterator<>() {
-            Node<T> cur = first;
-            public boolean hasNext() {
-                return cur!=null;
-            }
-            public T next() {
-                T elem = cur.elem;
-                cur = cur.next;
-                return elem;
-            }
-        };
+    private class Iter implements Iterator<T> {
+        Node<T> cur = first;
+        public boolean hasNext() {
+            return cur!=null;
+        }
+        public T next() {
+            T elem = cur.elem;
+            cur = cur.next;
+            return elem;
+        }
     }
-    public ListIterator<T> listIterator() {
-        return null; // TODO: implementar
+    public Iterator<T> iterator() { return new Iter(); }
+
+    private class ListIter extends Iter implements ListIterator<T> {
+        int idx = 0;
+        int dir = 0;   // -1 prev ; 0 ??? ; 1 next
+        public T next() {
+            ++idx; dir=1;
+            return super.next();
+        }
+        public boolean hasPrevious() { return cur.prev != null; }
+        public T previous() {
+            cur = cur.prev;
+            --idx; dir=-1;
+            return cur.elem;
+        }
+        public int nextIndex() { return idx; }
+        public int previousIndex() { return idx-1; }
+        public void remove() { throw new UnsupportedOperationException();  }
+        public void set(T t) {
+            switch (dir) {
+                case 0: throw new IllegalStateException();
+                case 1: cur.prev.elem = t; return;
+                case -1: cur.elem = t;
+            }
+        }
+        public void add(T t) {
+            Node<T> n = new Node<>(t,cur, cur!=null ? cur.prev : last );
+            if (cur==first) first = n;
+            if (cur==null) last = n;
+        }
     }
+    public ListIterator<T> listIterator() { return new ListIter(); }
 }
