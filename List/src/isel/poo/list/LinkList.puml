@@ -1,5 +1,7 @@
 @startuml
 
+class AbstractList<T>
+
 class LinkList<T> {
   '-first :Node
   -counter :int
@@ -11,10 +13,11 @@ class LinkList<T> {
   getIterator():Iterator<T>
 }
 LinkList ..> It : <<create>>
+AbstractList <|-- LinkList
 
 interface Iterator<T> {
-   +hasNext():boolean
-   +next():T
+   '+hasNext():boolean
+   '+next():T
 }
 
 class It<T> {
@@ -29,6 +32,7 @@ class Node<T> {
 
 Node <- It : -cur
 Node -> Node : ~next
+Node -> Node : -prev
 'LinkList ..> IntIterator
 LinkList +- Node : "  "
 LinkList -> Node : -first

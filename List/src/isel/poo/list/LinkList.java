@@ -1,11 +1,13 @@
 package isel.poo.list;
 import java.util.AbstractList;
 import java.util.Iterator;
+import java.util.ListIterator;
 
 public class LinkList<T> extends AbstractList<T> {
 
     private static class Node<T> {
         Node<T> next;
+        Node<T> prev;  // TODO: modificar addFirst, add, e remove
         T elem;
         Node(T value, Node<T> next) {
             elem = value;
@@ -69,5 +71,8 @@ public class LinkList<T> extends AbstractList<T> {
                 return elem;
             }
         };
+    }
+    public ListIterator<T> listIterator() {
+        return null; // TODO: implementar
     }
 }
