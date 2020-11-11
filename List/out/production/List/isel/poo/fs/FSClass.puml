@@ -1,0 +1,25 @@
+@startuml
+
+abstract class Entry {
+  -name:String
+  getName():String
+  {abstract} getSize():int
+  'pathName():String
+}
+
+class Folder {
+  getSize():int
+  add(e :Entry)
+}
+
+class File {
+  -size:int
+  getSize():int
+}
+
+Folder *-- "*" Entry : -entries
+Entry <|-- File
+Entry <|-- Folder :"     "
+
+
+@enduml

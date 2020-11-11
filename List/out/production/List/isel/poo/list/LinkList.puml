@@ -1,28 +1,36 @@
 @startuml
 
+'hide circles
+'skinparam classAttributeIconSize 0
+
 class AbstractList<T>
 
 class LinkList<T> {
   '-first :Node
   -counter :int
-  add(elem:T)
+  +add(elem:T)
   addFirst(elem:T)
   get(idx:int) :T
   remove(idx:int)
   size() :int
-  getIterator():Iterator<T>
+  iterator():Iterator<T>
+  listIterator():ListIterator<T>
 }
-LinkList ..> It : <<create>>
+LinkList ..> Iter : <<create>>
+LinkList ..> ListIter : <<create>>
 AbstractList <|-- LinkList
 
-interface Iterator<T> {
-   '+hasNext():boolean
-   '+next():T
-}
+interface Iterator<T>
+interface ListIterator<T>
 
-class It<T> {
+class Iter<T> {
    '+hasNext():boolean
    '+next():int
+}
+
+class ListIter<T> {
+    idx :int
+    dir :int
 }
 
 class Node<T> {
@@ -30,15 +38,19 @@ class Node<T> {
   '~next :Node
 }
 
-Node <- It : -cur
+Node <- Iter : -cur
 Node -> Node : ~next
 Node -> Node : -prev
 'LinkList ..> IntIterator
 LinkList +- Node : "  "
 LinkList -> Node : -first
 LinkList -> Node : -last
-LinkList +-- It
+LinkList +-- Iter : "   "
+LinkList +-- ListIter
 
-Iterator <|. It : "      "
+Iter .|> Iterator : "      "
+Iterator <|-- ListIterator
+ListIter .|> ListIterator : "      "
+Iter <|-- ListIter
 
 @enduml

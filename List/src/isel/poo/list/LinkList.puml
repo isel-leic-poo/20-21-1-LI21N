@@ -1,11 +1,14 @@
 @startuml
 
+'hide circles
+'skinparam classAttributeIconSize 0
+
 class AbstractList<T>
 
 class LinkList<T> {
   '-first :Node
   -counter :int
-  add(elem:T)
+  +add(elem:T)
   addFirst(elem:T)
   get(idx:int) :T
   remove(idx:int)
@@ -17,10 +20,8 @@ LinkList ..> Iter : <<create>>
 LinkList ..> ListIter : <<create>>
 AbstractList <|-- LinkList
 
-interface Iterator<T> {
-   '+hasNext():boolean
-   '+next():T
-}
+interface Iterator<T>
+interface ListIterator<T>
 
 class Iter<T> {
    '+hasNext():boolean
