@@ -1,19 +1,35 @@
 package isel.poo.fs;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 public class Folder extends Entry {
+    private final List<Entry> entries = new LinkedList<>();
     public Folder(String name) {
         super(name);
     }
     @Override
     public int getSize() {
-        return 0;
+        int totalSize = 0;
+        for(Entry e : entries)
+            totalSize += e.getSize();
+        return totalSize;
     }
 
     @Override
     public String toString() {
-        return "...";
+        final StringBuilder str = new StringBuilder(name);
+        str.append('{');
+        Iterator<Entry> it = entries.iterator();
+        if (it.hasNext()) str.append(it.next().toString());
+        while (it.hasNext())
+            str.append(',').append(it.next().toString());
+        return str.append('}').toString();
     }
-    public void add(Entry entry) {
 
+    public void add(Entry entry) {
+        entries.add(entry);
     }
 }

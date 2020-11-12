@@ -4,11 +4,13 @@ abstract class Entry {
   -name:String
   getName():String
   {abstract} getSize():int
+  toString():String
   'pathName():String
 }
 
 class Folder {
   getSize():int
+  toString():String
   add(e :Entry)
 }
 
