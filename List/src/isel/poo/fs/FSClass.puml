@@ -5,8 +5,10 @@ abstract class Entry {
   getName():String
   {abstract} getSize():int
   toString():String
-  'pathName():String
+  pathName():String
 }
+
+Entry --> Folder : parent
 
 class Folder {
   getSize():int
@@ -23,5 +25,11 @@ Folder *-- "*" Entry : -entries
 Entry <|-- File
 Entry <|-- Folder :"     "
 
+class Link {
+  getSize():int
+  toString():String
+}
+Entry <|-- Link
+Entry <-- Link :source
 
 @enduml

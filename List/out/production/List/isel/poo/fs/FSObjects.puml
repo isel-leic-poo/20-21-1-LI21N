@@ -1,0 +1,47 @@
+@startuml
+
+object root {
+  name = "C:"
+  parent = null
+}
+
+object "?" as empty {
+  name = "Empty"
+}
+root --> empty :entry
+root <-- empty :parent
+
+object poo {
+  name = "POO"
+}
+root --> poo :entry
+root <-- poo :parent
+
+object aula {
+  name = "aula.txt"
+  size = 100
+}
+poo --> aula :entry
+poo <-- aula :parent
+
+object "?" as str {
+  name = "Str.java"
+  size = 2340
+}
+poo --> str :entry
+poo <-- str :parent
+
+object "?" as file {
+  name = "file.txt"
+  size = 1024
+}
+root --> file :entry
+root <-- file :parent
+
+object "?" as link {
+  name = "a.txt"
+}
+file  <-- link : source
+poo <-- link : parent
+poo --> link : entry
+@enduml

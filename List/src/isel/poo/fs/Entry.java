@@ -2,6 +2,7 @@ package isel.poo.fs;
 
 public abstract class Entry {
     protected final String name;
+    protected Folder parent;
 
     public Entry(String name) {
         this.name = name;
@@ -14,5 +15,8 @@ public abstract class Entry {
 
     public abstract int getSize();
 
-    public String pathName() { /* TODO: */ return null; }
+    public String pathName() {
+        if (parent==null) return name;
+        return parent.pathName()+"/"+name;
+    }
 }

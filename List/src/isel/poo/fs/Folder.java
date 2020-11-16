@@ -31,5 +31,6 @@ public class Folder extends Entry {
 
     public void add(Entry entry) {
         entries.add(entry);
+        entry.parent = this;
     }
 }
