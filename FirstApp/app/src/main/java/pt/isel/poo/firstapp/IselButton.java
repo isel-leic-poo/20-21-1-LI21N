@@ -19,7 +19,7 @@ public class IselButton extends Button {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction()==MotionEvent.ACTION_DOWN)
-            Log.d(MainActivity.TAG,"Touched");
+            Log.d(FirstAppActivity.TAG,"Touched");
         return super.onTouchEvent(event);
     }
 }
