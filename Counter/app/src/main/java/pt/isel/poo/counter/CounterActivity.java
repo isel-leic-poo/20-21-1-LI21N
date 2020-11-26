@@ -1,18 +1,18 @@
 package pt.isel.poo.counter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.*;
 
 public class CounterActivity extends Activity { // Ctrl
 
     TextView value;          // View
     Button reset, inc, dec;  // View
     BallView ball;           // View
+
     Counter model = new Counter(); // Model
 
     @Override
@@ -27,10 +27,20 @@ public class CounterActivity extends Activity { // Ctrl
         reset.setOnClickListener( v-> { model.reset(); updateView(); });
         inc.setOnClickListener( v-> { model.inc(); updateView(); });
         dec.setOnClickListener( v-> { model.dec(); updateView(); });
+        ball.setOnMoveListener(new BallView.OnMoveListener() {
+            @Override
+            public void onMove(int val) {
+                model.setValue(val);
+                updateView();
+            }
+        });
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateView() {
-        value.setText(Integer.toString(model.getValue()));
+        int val = model.getValue();
+        value.setText(Integer.toString(val));
+        ball.setValue(val);
     }
 
     private View initView() {
