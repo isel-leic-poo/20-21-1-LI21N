@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import pt.isel.poo.draw.model.Line;
 import pt.isel.poo.draw.model.Picture;
 import pt.isel.poo.draw.model.Point;
 
@@ -19,17 +20,19 @@ public class DesignView extends View {
     public DesignView(Context ctx) {
         super(ctx);
         p.setColor(Color.BLACK);
-        p.setStrokeWidth(5F);
+        p.setStrokeWidth(10F);
         p.setStrokeCap(Paint.Cap.ROUND);
     }
     @Override
     protected void onDraw(Canvas canvas) {
         try {
             super.onDraw(canvas);
-            Point pt = model.getStart();
-            for(Point end : model) {
-                canvas.drawLine(pt.x,pt.y,end.x,end.y,p);
-                pt = end;
+            for(Line line : model) {
+                Point pt = line.getStart();
+                for (Point end : line) {
+                    canvas.drawLine(pt.x, pt.y, end.x, end.y, p);
+                    pt = end;
+                }
             }
         } catch ( NullPointerException e ) {
             Log.v("DRAW","Empty segment.");
@@ -41,7 +44,7 @@ public class DesignView extends View {
         int a = event.getAction();
         if (a==MotionEvent.ACTION_DOWN || a==MotionEvent.ACTION_MOVE) {
             Point pt = new Point( (int)event.getX(), (int)event.getY() );
-            if (a==MotionEvent.ACTION_DOWN) model.setStart(pt);
+            if (a==MotionEvent.ACTION_DOWN) model.addLine(pt);
             else model.add(pt);
             invalidate();
             return true;
