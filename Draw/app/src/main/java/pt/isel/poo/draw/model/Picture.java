@@ -1,5 +1,7 @@
 package pt.isel.poo.draw.model;
 
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -20,5 +22,8 @@ public class Picture  extends LinkedList<Line> { //implements Iterable<Line>{
 
     public void add(Point p) {
         getLast().add(p);
+    }
+    public void save(OutputStream os) {
+
     }
 }
