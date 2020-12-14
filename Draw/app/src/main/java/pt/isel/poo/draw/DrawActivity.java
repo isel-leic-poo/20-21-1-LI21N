@@ -10,15 +10,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 import pt.isel.poo.draw.model.Picture;
 
 public class DrawActivity extends AppCompatActivity {
 
+    public static final String FILE_NAME = "picture.txt";
     Button clear, undo, save, load;
     DesignView view;
     Picture model = new Picture();
@@ -31,14 +36,23 @@ public class DrawActivity extends AppCompatActivity {
         clear.setOnClickListener(v -> {model.clear(); view.setModel(model);});
         undo.setOnClickListener(v -> {model.removeLast(); view.invalidate();});
         save.setOnClickListener( v -> save() );
+        load.setOnClickListener( v -> load() );
         view.setModel(model);
+    }
+    private void load() {
+        try (BufferedReader br = new BufferedReader( new InputStreamReader( openFileInput(FILE_NAME)))) {
+            model.load(br);
+        }catch (IOException ex) {
+            Log.e("DRAW","Error reading file",ex);
+            ex.printStackTrace();
+        }
     }
 
     private void save() {
-        try {
-            FileOutputStream fos = openFileOutput("picture.txt", Activity.MODE_PRIVATE);
-            model.save(fos);
-            fos.close();
+        try (BufferedWriter bw = new BufferedWriter( new OutputStreamWriter(
+                openFileOutput(FILE_NAME, Activity.MODE_PRIVATE)
+            ))) {
+            model.save(bw);
         } catch (IOException ex) {
             Log.e("DRAW","Error creating file",ex);
             ex.printStackTrace();
