@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Scanner;
 
 public class Line extends LinkedList<Point> {
     private Point start;
@@ -25,7 +26,14 @@ public class Line extends LinkedList<Point> {
         bw.newLine();
     }
 
-    public static Line loadFrom(BufferedReader br) throws IOException {
+    public static Line loadFrom(Scanner s) throws IOException {
+        int n = s.nextInt();
+        Line l = new Line();
+        l.setStart(Point.fromString(s.next()));
+        for( ; n>1 ; --n )
+            l.add( Point.fromString(s.next()));
+        return l;
+        /*
         String line = br.readLine();
         int idxSpace = line.indexOf(' ');
         int n = Integer.parseInt( line.substring(0,idxSpace) );
@@ -34,9 +42,11 @@ public class Line extends LinkedList<Point> {
             int start = idxSpace+1;
             idxSpace = line.indexOf(' ',start);
             Point p = Point.fromString(line.substring(start,idxSpace));
-            l.add(p);
+            if (i==0) l.setStart(p);
+            else l.add(p);
         }
         return l;
+         */
     }
 
 }

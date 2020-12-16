@@ -1,6 +1,6 @@
 package pt.isel.poo.draw.model;
 
-import android.text.InputType;
+import java.util.Scanner;
 
 public class Point {
     public final int x, y;
@@ -14,9 +14,15 @@ public class Point {
         return "(" + x + ',' + y + ')';
     }
     public static Point fromString(String txt) {
-        int idx = txt.indexOf(',');
-        int x = Integer.parseInt(txt.substring(1,idx));
-        int y = Integer.parseInt(txt.substring(idx+1,txt.length()-1));
+        /*
+        Scanner s = new Scanner(txt);
+        s.useDelimiter(",\\(\\)");
+        int x = s.nextInt();
+        int y = s.nextInt();
+        */
+        final int idx = txt.indexOf(',');
+        final int x = Integer.parseInt(txt.substring(1,idx));
+        final int y = Integer.parseInt(txt.substring(idx+1,txt.length()-1));
         return new Point(x,y);
     }
 }

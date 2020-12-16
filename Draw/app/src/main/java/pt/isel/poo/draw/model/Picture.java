@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.LinkedList;
+import java.util.Scanner;
 
 public class Picture  extends LinkedList<Line> {
 
@@ -26,10 +27,10 @@ public class Picture  extends LinkedList<Line> {
             l.save(bw);
         }
     }
-    public void load(BufferedReader br) throws IOException {
-        int n = Integer.parseInt(br.readLine());
+    public void load(Scanner s) throws IOException {
+        int n = s.nextInt();
         for (int i = 0; i < n; i++) {
-            Line l = Line.loadFrom(br);
+            Line l = Line.loadFrom(s);
             add(l);
         }
     }

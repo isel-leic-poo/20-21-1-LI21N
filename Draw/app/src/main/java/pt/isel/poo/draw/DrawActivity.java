@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,6 +19,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Scanner;
 
 import pt.isel.poo.draw.model.Picture;
 
@@ -40,11 +42,12 @@ public class DrawActivity extends AppCompatActivity {
         view.setModel(model);
     }
     private void load() {
-        try (BufferedReader br = new BufferedReader( new InputStreamReader( openFileInput(FILE_NAME)))) {
-            model.load(br);
+        try (Scanner s = new Scanner(openFileInput(FILE_NAME))) {
+            model.load(s);
+            view.invalidate();
         }catch (IOException ex) {
             Log.e("DRAW","Error reading file",ex);
-            ex.printStackTrace();
+            Toast.makeText(this,"Error reading",Toast.LENGTH_LONG).show();
         }
     }
 
@@ -55,7 +58,6 @@ public class DrawActivity extends AppCompatActivity {
             model.save(bw);
         } catch (IOException ex) {
             Log.e("DRAW","Error creating file",ex);
-            ex.printStackTrace();
         }
     }
 
