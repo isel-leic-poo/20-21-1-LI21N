@@ -1,8 +1,5 @@
 package pt.isel.poo.draw;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -64,12 +64,17 @@ public class DrawActivity extends AppCompatActivity {
         }
     }
 
+    // https://videoconf-colibri.zoom.us/my/palex
+
     private void save() {
         try (BufferedWriter bw = new BufferedWriter( new OutputStreamWriter(
                 openFileOutput(FILE_NAME, Activity.MODE_PRIVATE)
             ))) {
             model.save(bw);
-        } catch (IOException ex) {
+            bw.write(model.getClass().getSimpleName()); bw.newLine();
+            Class<?> cls = Class.forName("pt.isel.poo.draw.model.Point");
+            bw.write(cls.getName());
+        } catch (IOException | ClassNotFoundException ex) {
             Log.e(TAG,"Error creating file",ex);
         }
     }
