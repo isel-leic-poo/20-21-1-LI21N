@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -13,7 +14,10 @@ public class BallView extends View {
     private int value = 0;
 
     public BallView(Context context) {
-        super(context);
+        this(context,null);
+    }
+    public BallView(Context ctx, AttributeSet attrs) {
+        super(ctx,attrs);
         p.setStyle(Paint.Style.FILL);
         p.setStrokeWidth(10);
         setBackgroundColor(Color.YELLOW);

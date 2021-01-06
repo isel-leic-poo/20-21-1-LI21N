@@ -18,9 +18,8 @@ public class CounterActivity extends Activity { // Ctrl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View root = initView();
+        initView();
         initListeners();
-        setContentView(root);
     }
 
     private void initListeners() {
@@ -43,7 +42,8 @@ public class CounterActivity extends Activity { // Ctrl
         ball.setValue(val);
     }
 
-    private View initView() {
+    private void initView() {
+        /*
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
         LinearLayout buttons = new LinearLayout(this);
@@ -69,6 +69,13 @@ public class CounterActivity extends Activity { // Ctrl
         buttons.addView(dec);
         root.addView(ball);
 
-        return root;
+        setContentView(root);
+         */
+        setContentView(R.layout.counter_layout);
+        value = findViewById(R.id.value);
+        reset = findViewById(R.id.reset);
+        inc = findViewById(R.id.inc);
+        dec = findViewById(R.id.dec);
+        ball = findViewById(R.id.ball);
     }
 }
