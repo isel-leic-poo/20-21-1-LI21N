@@ -1,19 +1,19 @@
 package pt.isel.poo.escape;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Iterator;
+
 import pt.isel.poo.escape.model.Escape;
+import pt.isel.poo.escape.model.Hero;
+import pt.isel.poo.escape.model.Point;
+import pt.isel.poo.escape.model.Robot;
 import pt.isel.poo.escape.view.ActorTile;
 import pt.isel.poo.escape.view.HeroTile;
 import pt.isel.poo.escape.view.RobotTile;
-import pt.isel.poo.tile.Img;
 import pt.isel.poo.tile.OnTileTouchListener;
-import pt.isel.poo.tile.Tile;
 import pt.isel.poo.tile.TilePanel;
 
 public class EscapeCtrl extends AppCompatActivity {
@@ -21,21 +21,23 @@ public class EscapeCtrl extends AppCompatActivity {
     public static final int COLS = 12;
 
     Escape model = new Escape(LINES,COLS);
+    TilePanel panel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.escape_layout);
         ActorTile.setContext(this);
-        TilePanel panel = findViewById(R.id.panel);
-        panel.setTile(1, 1, new RobotTile() );
-        panel.setTile(6, 4, new RobotTile() );
-        panel.setTile(8, 2, new RobotTile() );
-        panel.setTile(5,5, new HeroTile() );
+        panel = findViewById(R.id.panel);
+        panel.setSize(COLS,LINES);
+        model.startNextLevel();
+        updateView();
+
         panel.setListener(new OnTileTouchListener() {
             @Override
             public boolean onClick(int xTile, int yTile) {
-                panel.setTile(xTile,yTile, new HeroTile());
+                model.moveHeroInDirectionOf( new Point(yTile,xTile) );
+                updateView();
                 return true;
             }
             @Override
@@ -45,5 +47,20 @@ public class EscapeCtrl extends AppCompatActivity {
             @Override
             public void onDragCancel() { }
         });
+    }
+
+    private void updateView() {
+        for(int x=0 ; x < panel.getWidthInTiles() ; ++x)
+            for(int y=0 ; y<panel.getHeightInTiles() ; ++y)
+                panel.setTile(x,y,null);
+        Hero h = model.getHero();
+        Point hp = h.getLocal();
+        panel.setTile(hp.col,hp.line, new HeroTile());
+        Iterator<Robot> itr = model.getRobots();
+        while ( itr.hasNext() ) {
+            Robot r = itr.next();
+            Point rp = r.getLocal();
+            panel.setTile(rp.col,rp.line, new RobotTile());
+        }
     }
 }

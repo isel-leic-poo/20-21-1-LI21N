@@ -1,5 +1,6 @@
 package pt.isel.poo.escape.model;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -26,10 +27,13 @@ public class Escape {
     }
 
     public void moveHeroInDirectionOf( Point target ) {
-        hero.move(target);
+        hero.moveInDirectionOf(target);
         for (Robot r : robots)
-            r.move( hero.local );
+            r.moveInDirectionOf( hero.local );
     }
+
+    public Hero getHero() { return hero; }
+    public Iterator<Robot> getRobots() { return robots.iterator(); }
 
     private Point freePosition() {
         Point p;

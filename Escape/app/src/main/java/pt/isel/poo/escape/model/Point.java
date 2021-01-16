@@ -21,4 +21,15 @@ public class Point {
     public int hashCode() {
         return col + 31 * line;
     }
+
+    public Point add(Dir dir) { return new Point(line+dir.dLin, col+dir.dCol); }
+
+    public Dir dirTo(Point p) {
+        int dLine = reduce(p.line - line);
+        int dCol = reduce(p.col - col);
+        for( Dir d : Dir.values() )
+            if (d.dLin == dLine && d.dCol == dCol) return d;
+        return null;
+    }
+    private static int reduce(int dif) { return dif<=-1 ? -1 : dif>=1 ? 1 : 0; }
 }
