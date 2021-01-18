@@ -10,7 +10,7 @@ public class Escape {
     private final int lines;
     private final int cols;
     private Hero hero;
-    private List<Robot> robots = new LinkedList<>();
+    List<Actor> actors = new LinkedList<>();
     private int level = 0;
 
     public Escape(int lines, int cols) {
@@ -21,19 +21,19 @@ public class Escape {
     public void startNextLevel() {
         ++level;
         for(int r = 0; r < level*ROBOTS_FACTOR ; ++r) {
-            robots.add( new Robot( freePosition() ) );
+            new Robot(this, freePosition() );
         }
-        hero = new Hero( freePosition() );
+        hero = new Hero(this, freePosition() );
     }
 
     public void moveHeroInDirectionOf( Point target ) {
         hero.moveInDirectionOf(target);
-        for (Robot r : robots)
-            r.moveInDirectionOf( hero.local );
+        for (Actor a : actors)
+            a.moveToHero( hero.local );
     }
 
     public Hero getHero() { return hero; }
-    public Iterator<Robot> getRobots() { return robots.iterator(); }
+    public Iterator<Actor> getActors() { return actors.iterator(); }
 
     private Point freePosition() {
         Point p;
@@ -45,8 +45,17 @@ public class Escape {
     }
 
     private boolean exitsActorIn(Point p) {
-        for (Robot r : robots)
-            if (r.local.equals(p)) return true;
-        return false;
+        return getActor(p)!=null;
+    }
+
+    EscapeListener listener;
+
+    public void setListener(EscapeListener listener) {
+        this.listener = listener;
+    }
+    public Actor getActor(Point to) {
+        for (Actor a : actors)
+            if (a.local.equals(to)) return a;
+        return null;
     }
 }
