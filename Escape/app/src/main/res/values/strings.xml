@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Escape</string>
+    <string name="jump">Jump</string>
+    <string name="win">You Win</string>
+    <string name="over">GAME OVER</string>
 </resources>

@@ -31,6 +31,9 @@ public class Escape {
         for (Actor a : actors)
             a.moveToHero( hero.local );
     }
+    public void jumpHero() {
+        hero.moveTo( freePosition() );
+    }
 
     public Hero getHero() { return hero; }
     public Iterator<Actor> getActors() { return actors.iterator(); }

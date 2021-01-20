@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fuga</string>
+    <string name="jump">Saltar</string>
+    <string name="win">Parabéns</string>
+    <string name="over">Perdeste</string>
+</resources>

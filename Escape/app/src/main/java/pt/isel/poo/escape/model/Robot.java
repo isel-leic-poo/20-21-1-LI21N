@@ -7,11 +7,19 @@ public class Robot extends Actor {
 
     @Override
     void moveTo(Point to) {
-        Actor a = model.getActor(to);
+        Actor a = game.getActor(to);
         if ( a instanceof Robot ) {
             a.destroy();
             destroy();
-            new Junk(model,to);
+            new Junk(game,to);
+            return;
+        }
+        if ( a instanceof Junk ) {
+            destroy();
+            return;
+        }
+        if ( a instanceof Hero ) {
+            a.destroy();
             return;
         }
         super.moveTo(to);

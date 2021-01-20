@@ -1,22 +1,12 @@
 package pt.isel.poo.escape;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Iterator;
-
-import pt.isel.poo.escape.model.Actor;
-import pt.isel.poo.escape.model.Escape;
-import pt.isel.poo.escape.model.EscapeListener;
-import pt.isel.poo.escape.model.Hero;
-import pt.isel.poo.escape.model.Junk;
-import pt.isel.poo.escape.model.Point;
-import pt.isel.poo.escape.model.Robot;
-import pt.isel.poo.escape.view.ActorTile;
-import pt.isel.poo.escape.view.HeroTile;
-import pt.isel.poo.escape.view.JunkTile;
-import pt.isel.poo.escape.view.RobotTile;
+import pt.isel.poo.escape.model.*;
+import pt.isel.poo.escape.view.*;
 import pt.isel.poo.tile.OnTileTouchListener;
 import pt.isel.poo.tile.Tile;
 import pt.isel.poo.tile.TilePanel;
@@ -35,36 +25,54 @@ public class EscapeCtrl extends AppCompatActivity {
         ActorTile.setContext(this);
         panel = findViewById(R.id.panel);
         panel.setSize(COLS,LINES);
-        model.setListener( new EscapeListener() {
-            @Override
-            public void actorMoved(Point old, Actor actor) {
-                Tile t = panel.getTile(old.col, old.line);
-                panel.setTile(old.col,old.line,null);
-                Point pos = actor.getLocal();
-                panel.setTile(pos.col,pos.line, t);
-            }
-            @Override
-            public void actorCreated(Actor actor) {
-                Point pos = actor.getLocal();
-                panel.setTile(pos.col,pos.line, createTile(actor));
-            }
-        });
+        model.setListener( viewUpdater );
         model.startNextLevel();
-
-        panel.setListener(new OnTileTouchListener() {
-            @Override
-            public boolean onClick(int xTile, int yTile) {
-                model.moveHeroInDirectionOf( new Point(yTile,xTile) );
-                return true;
-            }
-            @Override
-            public boolean onDrag(int xFrom, int yFrom, int xTo, int yTo) { return false; }
-            @Override
-            public void onDragEnd(int x, int y) { }
-            @Override
-            public void onDragCancel() { }
-        });
+        panel.setListener(clickListener);
+        findViewById(R.id.jump).setOnClickListener( v -> model.jumpHero() );
     }
+
+    private EscapeListener viewUpdater = new EscapeListener() {
+        @Override
+        public void actorMoved(Point old, Actor actor) {
+            Tile t = panel.getTile(old.col, old.line);
+            panel.setTile(old.col,old.line,null);
+            Point pos = actor.getLocal();
+            panel.setTile(pos.col,pos.line, t);
+        }
+        @Override
+        public void actorCreated(Actor actor) {
+            Point pos = actor.getLocal();
+            panel.setTile(pos.col,pos.line, createTile(actor));
+        }
+        @Override
+        public void actorRemoved(Actor actor) {
+            Point pos = actor.getLocal();
+            panel.setTile(pos.col,pos.line, null);
+        }
+        @Override
+        public void gameOver(boolean win) {
+            String txt = getString(win? R.string.win : R.string.over);
+            Toast.makeText(EscapeCtrl.this,txt,Toast.LENGTH_LONG).show();
+            if (!win) {
+                Point pos = model.getHero().getLocal();
+                panel.setTile(pos.col,pos.line, new DeadTile());
+            }
+        }
+    };
+
+    private OnTileTouchListener clickListener = new OnTileTouchListener() {
+        @Override
+        public boolean onClick(int xTile, int yTile) {
+            model.moveHeroInDirectionOf( new Point(yTile,xTile) );
+            return true;
+        }
+        @Override
+        public boolean onDrag(int xFrom, int yFrom, int xTo, int yTo) { return false; }
+        @Override
+        public void onDragEnd(int x, int y) { }
+        @Override
+        public void onDragCancel() { }
+    };
 
     private ActorTile createTile(Actor actor) {
         if (actor instanceof Hero)
