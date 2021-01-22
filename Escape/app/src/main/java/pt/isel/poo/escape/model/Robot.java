@@ -1,8 +1,11 @@
 package pt.isel.poo.escape.model;
 
 public class Robot extends Actor {
+    private static int numOfRobots = 0;
+
     Robot(Escape m, Point local) {
         super(m,local);
+        ++numOfRobots;
     }
 
     @Override
@@ -23,10 +26,23 @@ public class Robot extends Actor {
             return;
         }
         super.moveTo(to);
+        game.actors.add(this);
     }
 
     @Override
     public void moveToHero(Point heroPos) {
         moveInDirectionOf(heroPos);
     }
+
+    @Override
+    protected void destroy() {
+        super.destroy();
+        --numOfRobots;
+        if (numOfRobots == 0)
+            if (game.listener != null)
+                game.listener.gameOver(true);
+    }
+
+    @Override
+    public boolean isMovableToHero() { return true; }
 }

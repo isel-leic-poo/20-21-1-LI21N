@@ -1,6 +1,8 @@
 package pt.isel.poo.escape;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +19,7 @@ public class EscapeCtrl extends AppCompatActivity {
 
     Escape model = new Escape(LINES,COLS);
     TilePanel panel;
+    Button nextLevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,9 @@ public class EscapeCtrl extends AppCompatActivity {
         model.startNextLevel();
         panel.setListener(clickListener);
         findViewById(R.id.jump).setOnClickListener( v -> model.jumpHero() );
+        nextLevel = findViewById(R.id.next);
+        nextLevel.setOnClickListener( v -> startNextLevel() );
+        nextLevel.setVisibility( View.INVISIBLE );
     }
 
     private EscapeListener viewUpdater = new EscapeListener() {
@@ -56,7 +62,8 @@ public class EscapeCtrl extends AppCompatActivity {
             if (!win) {
                 Point pos = model.getHero().getLocal();
                 panel.setTile(pos.col,pos.line, new DeadTile());
-            }
+            } else
+                nextLevel.setVisibility(View.VISIBLE);
         }
     };
 
@@ -82,6 +89,14 @@ public class EscapeCtrl extends AppCompatActivity {
         if (actor instanceof Junk)
             return new JunkTile();
         return null;
+    }
+
+    private void startNextLevel() {
+        for(int x=0 ; x < panel.getWidthInTiles() ; ++x)
+            for(int y=0 ; y<panel.getHeightInTiles() ; ++y)
+                panel.setTile(x,y,null);
+        model.startNextLevel();
+        nextLevel.setVisibility(View.INVISIBLE);
     }
 
     /*

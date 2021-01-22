@@ -1,6 +1,7 @@
 package pt.isel.poo.escape.model;
 
 public class Hero extends Actor {
+    private boolean dead = false;
     Hero(Escape m, Point local) {
         super(m,local);
     }
@@ -13,6 +14,7 @@ public class Hero extends Actor {
 
     @Override
     void moveTo(Point to) {
+        if (dead) return;
         Actor a = game.getActor(to);
         if ( a != null ) {
             destroy();
@@ -23,7 +25,9 @@ public class Hero extends Actor {
 
     @Override
     protected void destroy() {
+        dead = true;
         if (game.listener!=null)
             game.listener.gameOver(false);
     }
+    public boolean isDead() { return dead; }
 }

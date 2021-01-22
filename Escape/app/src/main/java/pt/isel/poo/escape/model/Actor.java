@@ -32,4 +32,5 @@ public class Actor {
         if (game.listener!=null)
             game.listener.actorRemoved(this);
     }
+    public boolean isMovableToHero() { return false;  }
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Escape {
-    public static final int ROBOTS_FACTOR = 8;
+    public static final int ROBOTS_FACTOR = 2;
     private final int lines;
     private final int cols;
     private Hero hero;
@@ -20,6 +20,7 @@ public class Escape {
 
     public void startNextLevel() {
         ++level;
+        actors.clear();
         for(int r = 0; r < level*ROBOTS_FACTOR ; ++r) {
             new Robot(this, freePosition() );
         }
@@ -27,9 +28,13 @@ public class Escape {
     }
 
     public void moveHeroInDirectionOf( Point target ) {
+        if (hero.isDead()) return;
         hero.moveInDirectionOf(target);
+        LinkedList<Actor> moves = new LinkedList<>();
         for (Actor a : actors)
-            a.moveToHero( hero.local );
+            if (a.isMovableToHero()) moves.add(a);
+        for (Actor a : moves) actors.remove(a);
+        for (Actor a : moves) a.moveToHero(hero.local);
     }
     public void jumpHero() {
         hero.moveTo( freePosition() );
